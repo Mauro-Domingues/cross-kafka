@@ -9,7 +9,6 @@
     "clear": "npx tsc --build --clean",
     "prepublishOnly": "npm run build"
   },
-  "homepage": "https://cross-packages.gitbook.io/cross-kafka",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mauro-Domingues/cross-kafka"
@@ -27,7 +26,7 @@
     "name": "Mauro Domingues",
     "email": "maurinho.villa@hotmail.com"
   },
-  "createdAt": "Dec 18, 2022",
+  "createdAt": "Jul 03, 2024",
   "license": "Apache-2.0",
   "contributors": [],
   "files": [
