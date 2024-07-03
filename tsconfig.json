@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@base/*": ["base/*"],
+      "@core/*": ["core/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@partitionAssigners/*": ["partitionAssigners/*"],
+      "@utils/*": ["utils/*"]
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "tsBuildInfoFile": "cross.tsbuildinfo",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"],
+  "ts-node": { "files": true },
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}
