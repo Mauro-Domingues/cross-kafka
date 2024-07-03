@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc --declaration && npx tsc-alias",
-    "clear": "npx tsc --build --clean"
+    "clear": "npx tsc --build --clean",
+    "postinstall": "npm run build"
   },
   "homepage": "https://cross-packages.gitbook.io/cross-kafka",
   "repository": {
