@@ -129,7 +129,11 @@ class UserController {
   }
 
   public async delete(data: IBaseMessageDTO<number>): Promise<void> {
-    this.users.filter(user => user.id !== data.response);
+    const userIndex = this.users.findIndex(user => user.id !== data.response);
+
+    if (userIndex > -1) {
+      this.users.splice(userIndex, 1);
+    }
   }
 }
 ```
@@ -238,7 +242,7 @@ kafkaProvider.listen('SEND-MESSAGE', replyController, 'sendMessage');
 ```
 
 ### - Close
-It is used to close kafka connection
+It is used to close kafka connection.
 
 ```typescript
 import { kafkaProvider } from '@providers/kafkaProvider';
