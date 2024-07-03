@@ -51,7 +51,7 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
       this.config?.observerTimeout ?? this.defaults.observerTimeout;
   }
 
-  public getConsumerAssignments(): IConsumerAssignmentDTO {
+  protected getConsumerAssignments(): IConsumerAssignmentDTO {
     return this.consumerAssignments;
   }
 

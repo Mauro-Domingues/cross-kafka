@@ -17,9 +17,7 @@ import { isType } from '@utils/isType';
 
 export class KafkaPartitionAssigner {
   public constructor(
-    private readonly clientKafka: {
-      getConsumerAssignments: () => IConsumerAssignmentDTO;
-    },
+    private readonly clientKafka: object,
     private readonly config: {
       cluster: Cluster;
     },
@@ -263,6 +261,10 @@ export class KafkaPartitionAssigner {
   }
 
   private getPreviousAssignment(): IConsumerAssignmentDTO {
-    return this.clientKafka.getConsumerAssignments();
+    return (
+      this.clientKafka as {
+        getConsumerAssignments: () => IConsumerAssignmentDTO;
+      }
+    ).getConsumerAssignments();
   }
 }

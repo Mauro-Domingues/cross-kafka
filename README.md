@@ -41,7 +41,8 @@ const kafkaConfig: IKafkaConfigDTO = {
 };
 ```
 
-#### Interface
+#### Model
+If you work with the adapter design pattern.
 
 ```typescript
 import { IModelDTO } from 'cross-kafka';
