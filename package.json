@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An isolated core of kafkajs implementation based on @nestjs/microservices.",
   "type": "commonjs",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc --declaration && npx tsc-alias",
     "clear": "npx tsc --build --clean"
@@ -28,9 +29,6 @@
   "createdAt": "Dec 18, 2022",
   "license": "Apache-2.0",
   "contributors": [],
-  "files": [
-    "src/**/*.js"
-  ],
   "devDependencies": {
     "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
