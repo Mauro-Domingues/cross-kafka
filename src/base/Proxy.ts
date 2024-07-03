@@ -1,19 +1,20 @@
 import { randomUUID } from 'node:crypto';
-import {
-  catchError,
-  connectable,
-  defer,
-  EMPTY,
-  mergeMap,
-  Observable,
-  Observer,
-  Subject,
-  timeout,
-} from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { connectable } from 'rxjs/internal/observable/connectable';
+import { defer } from 'rxjs/internal/observable/defer';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { mergeMap } from 'rxjs/internal/operators/mergeMap';
+import { timeout } from 'rxjs/internal/operators/timeout';
+import { Subject } from 'rxjs/internal/Subject';
+import { Observer } from 'rxjs/internal/types';
 import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
 import { IPatternDTO } from '@interfaces/IPatternDTO';
-import { IWritePacketDTO, IReadPacketDTO } from '@interfaces/IProxyDTO';
-import { IModelDTO } from '@interfaces/IProxyDTO/IModelDTO';
+import {
+  IWritePacketDTO,
+  IReadPacketDTO,
+  IModelDTO,
+} from '@interfaces/IProxyDTO';
 import { isType } from '@utils/isType';
 
 export abstract class Proxy<MessageOptions> implements IModelDTO {

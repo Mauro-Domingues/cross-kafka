@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npx tsc --declaration && npx tsc-alias",
     "clear": "npx tsc --build --clean",
-    "postinstall": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "homepage": "https://cross-packages.gitbook.io/cross-kafka",
   "repository": {
@@ -30,6 +30,15 @@
   "createdAt": "Dec 18, 2022",
   "license": "Apache-2.0",
   "contributors": [],
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "!dist/interfaces/*.js"
+  ],
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "rxjs": "^7.8.1"
+  },
   "devDependencies": {
     "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
@@ -43,9 +52,5 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.7",
     "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "kafkajs": "^2.2.4",
-    "rxjs": "^7.8.1"
   }
 }

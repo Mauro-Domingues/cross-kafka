@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
 import { IPatternDTO } from '@interfaces/IPatternDTO';
 
