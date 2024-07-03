@@ -13,20 +13,20 @@ import {
 import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
 import { IPatternDTO } from '@interfaces/IPatternDTO';
 import { IWritePacketDTO, IReadPacketDTO } from '@interfaces/IProxyDTO';
+import { IModelDTO } from '@interfaces/IProxyDTO/IModelDTO';
 import { isType } from '@utils/isType';
 
-export abstract class Proxy<MessageOptions> {
+export abstract class Proxy<MessageOptions> implements IModelDTO {
+  protected readonly consumerAssignments: Record<string, number> = {};
+  protected readonly observerTimeout!: number;
   protected readonly routingMap = new Map<
     string,
     (packet: IWritePacketDTO<unknown>) => void
   >();
-
   protected readonly handlers = new Map<
     string,
     (data: IWritePacketDTO<unknown>) => unknown
   >();
-
-  protected readonly consumerAssignments: Record<string, number> = {};
 
   public close(): Promise<unknown> {
     return this.closeConnections();
@@ -59,7 +59,7 @@ export abstract class Proxy<MessageOptions> {
                 });
               }),
           ),
-          timeout(30000),
+          timeout(this.observerTimeout),
           catchError(error => {
             reject(error);
             return EMPTY;

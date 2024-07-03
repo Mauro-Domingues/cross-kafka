@@ -7,6 +7,7 @@ import {
 } from 'kafkajs';
 
 export interface IKafkaConfigDTO {
+  readonly observerTimeout?: number;
   readonly producerOnly?: boolean;
   readonly client?: KafkaConfig;
   readonly consumer?: ConsumerConfig;

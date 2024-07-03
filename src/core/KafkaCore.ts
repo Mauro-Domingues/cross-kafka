@@ -21,12 +21,12 @@ import { KafkaPartitionAssigner } from '@partitionAssigners/KafkaPartitionAssign
 import { isType } from '@utils/isType';
 
 export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
-  private client!: Kafka;
-  private consumer!: Consumer;
-  private producer!: Producer;
-  private initialized!: Promise<void> | null;
   private readonly responsePatterns: Array<string> = [];
+  private readonly config: IKafkaConfigDTO | undefined;
+  protected readonly observerTimeout: number;
+  private initialized!: Promise<void> | null;
   private readonly defaults = {
+    observerTimeout: 30000,
     client: {
       brokers: ['localhost:9092'],
       requestTimeout: 30000,
@@ -40,11 +40,15 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
     producer: {},
     send: {},
   } as Required<IKafkaConfigDTO>;
-  private readonly config: IKafkaConfigDTO | undefined;
+  private producer!: Producer;
+  private consumer!: Consumer;
+  private client!: Kafka;
 
   public constructor(config?: IKafkaConfigDTO) {
     super();
     this.config = config;
+    this.observerTimeout =
+      this.config?.observerTimeout ?? this.defaults.observerTimeout;
   }
 
   public getConsumerAssignments(): IConsumerAssignmentDTO {
