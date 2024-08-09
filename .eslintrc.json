@@ -119,7 +119,6 @@
     "@typescript-eslint/no-empty-function": "off",
     "no-shadow": "off",
     "no-useless-constructor": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
     "prettier/prettier": "error"
   },
   "settings": {

@@ -19,5 +19,5 @@ export const isType = {
   plainObject: isPlainObject,
   array: isArray,
   buffer: isBuffer,
-  NaN: isNaN,
+  nan: isNaN,
 };

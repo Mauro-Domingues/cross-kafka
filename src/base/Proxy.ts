@@ -10,16 +10,12 @@ import { Subject } from 'rxjs/internal/Subject';
 import { Observer } from 'rxjs/internal/types';
 import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
 import { IPatternDTO } from '@interfaces/IPatternDTO';
-import {
-  IWritePacketDTO,
-  IReadPacketDTO,
-  IModelDTO,
-} from '@interfaces/IProxyDTO';
+import { IWritePacketDTO, IReadPacketDTO, IModel } from '@interfaces/IProxyDTO';
 import { isType } from '@utils/isType';
 
-export abstract class Proxy<MessageOptions> implements IModelDTO {
+export abstract class Proxy<MessageOptions> implements IModel {
   protected readonly consumerAssignments: Record<string, number> = {};
-  protected readonly observerTimeout!: number;
+  protected declare readonly observerTimeout: number;
   protected readonly routingMap = new Map<
     string,
     (packet: IWritePacketDTO<unknown>) => void

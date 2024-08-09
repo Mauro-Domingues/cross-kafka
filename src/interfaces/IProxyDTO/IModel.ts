@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
 import { IPatternDTO } from '@interfaces/IPatternDTO';
 
-export interface IModelDTO {
+export interface IModel {
   close(): Promise<unknown>;
   subscribeFrom(pattern: IPatternDTO): void;
   send<Input, Output>(

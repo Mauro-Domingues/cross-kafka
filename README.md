@@ -24,8 +24,7 @@ npm install cross-kafka
 all settings are common to Kafka except observerTimeout, which is the wait time for an asynchronous response.
 
 ```typescript
-import { IKafkaConfigDTO } from 'cross-kafka';
-import { logLevel } from 'kafkajs';
+import { IKafkaConfigDTO, logLevel } from 'cross-kafka';
 
 const kafkaConfig: IKafkaConfigDTO = {
   observerTimeout: 40000,
@@ -45,9 +44,9 @@ const kafkaConfig: IKafkaConfigDTO = {
 If you work with the adapter design pattern.
 
 ```typescript
-import { IModelDTO } from 'cross-kafka';
+import { IModel } from 'cross-kafka';
 
-export interface IMessagingProviderDTO extends IModelDTO {}
+export interface IMessagingProvider extends IModel {}
 ```
 
 #### Implementation
@@ -55,22 +54,29 @@ Extend a class from KafkaCore, you can also extend an interface from IModelDTO t
 It is recommended to use the singleton pattern to save resources since the initial connection is expensive.
 
 ```typescript
+import { KafkaProvider } from '@providers/KafkaProvider';
+
+export type IKafkaProvider = KafkaProvider;
+```
+
+```typescript
 import { KafkaCore } from 'cross-kafka';
 import { kafkaConfig } from '@config/kafkaConfig';
-import { IMessagingProviderDTO } from '@models/IMessagingProviderDTO';
+import { IMessagingProvider } from '@models/IMessagingProvider';
+import { IKafkaProvider } from '@interfaces/IKafkaProvider';
 
-class KafkaProvider extends KafkaCore implements IMessagingProviderDTO {
-  private static instance: KafkaProvider | null = null;
+class KafkaProvider extends KafkaCore implements IMessagingProvider {
+  private static instance: IKafkaProvider;
 
   private constructor() {
     super(kafkaConfig);
   }
 
-  public static getInstance(): KafkaProvider {
+  public static getInstance(): IKafkaProvider {
     if (!KafkaProvider.instance) {
       KafkaProvider.instance = new KafkaProvider();
     }
-    return KafkaProvider.instance as KafkaProvider;
+    return KafkaProvider.instance;
   }
 }
 
@@ -98,25 +104,25 @@ kafkaProvider.emit('TOPIC', {
 Waits for a message and upon receiving it executes a callback.
 
 ```typescript
-interface IUser {
+interface IUserDTO {
   name: string;
   age: number;
   id: number;
 }
 
 class UserController {
-  private readonly users: Array<IUser> = [];
+  private readonly users: Array<IUserDTO> = [];
 
-  public async get(data: IBaseMessageDTO<number>): Promise<IUser | undefined> {
+  public async get(data: IBaseMessageDTO<number>): Promise<IUserDTO | undefined> {
     return this.users.find(user => user.id === data.response);
   }
 
-  public async create(data: IBaseMessageDTO<IUser>): Promise<void> {
+  public async create(data: IBaseMessageDTO<IUserDTO>): Promise<void> {
     this.users.push(data.response);
   }
 
   public async update(
-    data: IBaseMessageDTO<Partial<IUser> & { id: number }>,
+    data: IBaseMessageDTO<Partial<IUserDTO> & { id: number }>,
   ): Promise<void> {
     const user = this.users.find(user => user.id === data.response.id);
 
@@ -158,7 +164,7 @@ It is used to subscribe to a reply to a topic (is used in conjunction with the "
 ```typescript
 class Controller {
   public constructor(
-    private readonly messagingProvider: IMessagingProviderDTO,
+    private readonly messagingProvider: IMessagingProvider,
   ) {
     // It will listen 'SEND-DATA.reply'
     this.messagingProvider.subscribeFrom('SEND-DATA');
@@ -170,19 +176,19 @@ class Controller {
 It is used to send a message and wait for the message to return (timeout defined by observerTimeout).
 
 ```typescript
-interface IMessage {
+interface IMessageDTO {
   reply: string;
 }
 
 class RequestController {
   public constructor(
-    private readonly messagingProvider: IMessagingProviderDTO,
+    private readonly messagingProvider: IMessagingProvider,
   ) {
     this.messagingProvider.subscribeFrom('SEND-MESSAGE');
   }
 
-  public async getMessage(): Promise<IMessage> {
-    const message: IMessage = await this.messagingProvider.send(
+  public async getMessage(): Promise<IMessageDTO> {
+    const message: IMessageDTO = await this.messagingProvider.send(
       'SEND-MESSAGE',
       {
         message: 'Hello, send me a message!',
@@ -209,16 +215,16 @@ app.listen(1234)
 
 At your sender microservice:
 ```typescript
-interface IMessage {
+interface IMessageDTO {
   message: string;
 }
 
 class ReplyController {
   public constructor(
-    private readonly messagingProvider: IMessagingProviderDTO,
+    private readonly messagingProvider: IMessagingProvider,
   ) {}
 
-  public async sendMessage(data: IBaseMessageDTO<IMessage>): Promise<void> {
+  public async sendMessage(data: IBaseMessageDTO<IMessageDTO>): Promise<void> {
     this.messagingProvider.emit(
       data.replyTopic,
       {

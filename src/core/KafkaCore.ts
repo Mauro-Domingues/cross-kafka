@@ -23,8 +23,11 @@ import { isType } from '@utils/isType';
 export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
   private readonly responsePatterns: Array<string> = [];
   private readonly config: IKafkaConfigDTO | undefined;
+  private declare initialized: Promise<void> | null;
   protected readonly observerTimeout: number;
-  private initialized!: Promise<void> | null;
+  private declare producer: Producer;
+  private declare consumer: Consumer;
+  private declare client: Kafka;
   private readonly defaults = {
     observerTimeout: 30000,
     client: {
@@ -40,9 +43,6 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
     producer: {},
     send: {},
   } as Required<IKafkaConfigDTO>;
-  private producer!: Producer;
-  private consumer!: Consumer;
-  private client!: Kafka;
 
   public constructor(config?: IKafkaConfigDTO) {
     super();
@@ -136,7 +136,7 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
     const id = message?.key?.toString() as string;
 
     const replyPartition =
-      isType.number(partition) && !isType.NaN(partition)
+      isType.number(partition) && !isType.nan(partition)
         ? partition
         : undefined;
 
