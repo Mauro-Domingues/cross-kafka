@@ -144,12 +144,12 @@ class UserController {
 }
 ```
 
-Middleware sample
+Middleware example
 
 ```typescript
 export function userValidator(data: IBaseMessageDTO<IUserDTO>): void {
   if (data.response.name) {
-    data.error = new Error('Name is a required field')
+    throw new Error('Name is a required field')
   }
 };
 ```
