@@ -14,7 +14,6 @@ import { IWritePacketDTO, IReadPacketDTO, IModel } from '@interfaces/IProxyDTO';
 import { isType } from '@utils/isType';
 
 export abstract class Proxy<MessageOptions> implements IModel {
-  protected readonly consumerAssignments: Record<string, number> = {};
   protected declare readonly observerTimeout: number;
   protected readonly routingMap = new Map<
     string,
@@ -173,16 +172,6 @@ export abstract class Proxy<MessageOptions> implements IModel {
 
     const route = sortedPatternParams.join(',');
     return `{${route}}`;
-  }
-
-  protected getReplyTopicPartition(topic: string): string {
-    const minimumPartition = this.consumerAssignments[topic];
-
-    if (isType.undefined(minimumPartition)) {
-      throw new Error(topic);
-    }
-
-    return minimumPartition.toString();
   }
 
   protected decodeHeaderByKey<T>({

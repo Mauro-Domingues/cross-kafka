@@ -101,7 +101,7 @@ kafkaProvider.emit('TOPIC', {
 ```
 
 ### - Listen
-Waits for a message and upon receiving it executes a callback.
+Waits for a message and upon receiving it executes a callback (or a callback array, it has suport to behave like express middlewares).
 
 ```typescript
 interface IUserDTO {
@@ -144,18 +144,30 @@ class UserController {
 }
 ```
 
+Middleware sample
+
+```typescript
+export function userValidator(data: IBaseMessageDTO<IUserDTO>): void {
+  if (data.response.name) {
+    data.error = new Error('Name is a required field')
+  }
+};
+```
+
 At your entry point:
 
 ```typescript
 import { kafkaProvider } from '@providers/kafkaProvider';
 import { UserController } from '@controllers/userController';
+import { userValidator } from '@validators/userValidator';
+import { isAuthenticated } from '@middlewares/isAuthenticated';
 
 const userController = new UserController();
 
 kafkaProvider.listen('SHOW-USER', userController.get);
-kafkaProvider.listen('CREATE-USER', userController.create);
-kafkaProvider.listen('UPDATE-USER', userController.update);
-kafkaProvider.listen('DELETE-USER', userController.delete);
+kafkaProvider.listen('CREATE-USER', isAuthenticated, userValidator, userController.create);
+kafkaProvider.listen('UPDATE-USER', isAuthenticated, userValidator, userController.update);
+kafkaProvider.listen('DELETE-USER', isAuthenticated, userController.delete);
 ```
 
 ### - SubscribeFrom

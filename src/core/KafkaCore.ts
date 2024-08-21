@@ -21,6 +21,7 @@ import { KafkaPartitionAssigner } from '@partitionAssigners/KafkaPartitionAssign
 import { isType } from '@utils/isType';
 
 export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
+  private readonly consumerAssignments: Record<string, number> = {};
   private readonly responsePatterns: Array<string> = [];
   private readonly config: IKafkaConfigDTO | undefined;
   private declare initialized: Promise<void> | null;
@@ -341,6 +342,16 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
         this.consumerAssignments[topic] = Math.min(...memberPartitions);
       }
     });
+  }
+
+  private getReplyTopicPartition(topic: string): string {
+    const minimumPartition = this.consumerAssignments[topic];
+
+    if (isType.undefined(minimumPartition)) {
+      throw new Error(topic);
+    }
+
+    return minimumPartition.toString();
   }
 
   private getResponsePatternName(pattern: string): string {
