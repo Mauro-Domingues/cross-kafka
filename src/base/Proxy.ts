@@ -22,7 +22,7 @@ export abstract class Proxy<MessageOptions> implements IModel {
   >();
   protected readonly handlers = new Map<
     string,
-    (data: IWritePacketDTO<unknown>) => unknown
+    Array<(data: IWritePacketDTO<unknown>) => unknown>
   >();
 
   public close(): Promise<unknown> {
@@ -99,13 +99,14 @@ export abstract class Proxy<MessageOptions> implements IModel {
     return connectableSource;
   }
 
-  public listen<X>(pattern: IPatternDTO, context: X, handler: keyof X): void {
+  public listen<X>(
+    pattern: IPatternDTO,
+    ...handlers: Array<(data: IWritePacketDTO<X>) => unknown>
+  ): void {
     Promise.resolve(
       this.setListener({
         pattern,
-        handler: (
-          context[handler] as (data: IWritePacketDTO<unknown>) => unknown
-        ).bind(context),
+        handlers,
       }),
     ).then(() => this.connect());
   }
@@ -131,7 +132,7 @@ export abstract class Proxy<MessageOptions> implements IModel {
 
   protected abstract setListener<T, X>(data: {
     pattern: IPatternDTO;
-    handler: (data: IWritePacketDTO<T>) => X;
+    handlers: Array<(data: IWritePacketDTO<T>) => X>;
   }): void;
 
   protected abstract publish<Input, Output>(data: {

@@ -1,6 +1,6 @@
 {
   "name": "cross-kafka",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An isolated core of kafkajs implementation based on @nestjs/microservices.",
   "type": "commonjs",
   "main": "dist/index.js",

@@ -189,17 +189,17 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
   }
 
   protected setListener<T, X>({
-    handler,
+    handlers,
     pattern,
   }: {
     pattern: IPatternDTO;
-    handler: (data: IWritePacketDTO<T>) => X;
+    handlers: Array<(data: IWritePacketDTO<T>) => X>;
   }): void {
     const topic = this.normalizePattern(pattern);
 
     this.handlers.set(
       topic,
-      handler as (data: IWritePacketDTO<unknown>) => unknown,
+      handlers as Array<(data: IWritePacketDTO<unknown>) => unknown>,
     );
 
     this.responsePatterns.push(topic);
@@ -297,10 +297,15 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
       const { id, error, isDisposed, replyId, ...rest } =
         this.deserializeMessage(rawMessage.value, rawMessage);
 
-      const handler = this.handlers.get(payload.topic);
+      const handlers = this.handlers.get(payload.topic);
 
-      if (handler) {
-        handler({ replyId, error, isDisposed, ...rest });
+      if (handlers?.length) {
+        handlers?.reduce<Promise<unknown>>(async (prev, next) => {
+          await prev;
+
+          return next({ replyId, error, isDisposed, ...rest });
+        }, Promise.resolve());
+
         return;
       }
 

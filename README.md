@@ -152,10 +152,10 @@ import { UserController } from '@controllers/userController';
 
 const userController = new UserController();
 
-kafkaProvider.listen('SHOW-USER', userController, 'get');
-kafkaProvider.listen('CREATE-USER', userController, 'create');
-kafkaProvider.listen('UPDATE-USER', userController, 'update');
-kafkaProvider.listen('DELETE-USER', userController, 'delete');
+kafkaProvider.listen('SHOW-USER', userController.get);
+kafkaProvider.listen('CREATE-USER', userController.create);
+kafkaProvider.listen('UPDATE-USER', userController.update);
+kafkaProvider.listen('DELETE-USER', userController.delete);
 ```
 
 ### - SubscribeFrom
@@ -244,7 +244,7 @@ import { ReplyController } from '@controllers/replyController';
 
 const replyController = new ReplyController(kafkaProvider);
 
-kafkaProvider.listen('SEND-MESSAGE', replyController, 'sendMessage');
+kafkaProvider.listen('SEND-MESSAGE', replyController.sendMessage);
 ```
 
 ### - Close
