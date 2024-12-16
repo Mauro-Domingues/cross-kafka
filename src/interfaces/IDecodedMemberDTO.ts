@@ -1,4 +1,4 @@
-import { IConsumerAssignmentDTO } from '@interfaces/IKafkaPartitionAssignerDTO/IConsumerAssignmentDTO';
+import { IConsumerAssignmentDTO } from '@interfaces/IConsumerAssignmentDTO';
 
 export interface IDecodedMemberDTO {
   readonly memberId: string;
