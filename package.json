@@ -1,6 +1,6 @@
 {
   "name": "cross-kafka",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An isolated core of kafkajs implementation based on @nestjs/microservices.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -15,6 +15,10 @@
   },
   "bugs": {
     "url": "https://github.com/Mauro-Domingues/cross-kafka/issues"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/Mauro-Domingues"
   },
   "keywords": [
     "cross-kafka",
@@ -35,7 +39,7 @@
     "!dist/interfaces/*.js"
   ],
   "dependencies": {
-    "cross-proxy": "^1.0.0",
+    "cross-proxy": "^1.0.1",
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {

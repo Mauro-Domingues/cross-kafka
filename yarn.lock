@@ -390,10 +390,10 @@ confusing-browser-globals@^1.0.10:
   resolved "https://registry.yarnpkg.com/confusing-browser-globals/-/confusing-browser-globals-1.0.11.tgz#ae40e9b57cdd3915408a2805ebd3a5585608dc81"
   integrity sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==
 
-cross-proxy@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/cross-proxy/-/cross-proxy-1.0.0.tgz#f718b4ad5de0d5197b5c0985bacf400938d11952"
-  integrity sha512-jXJiTB2k00y+tcDJRfswjDD98j2vUggNizOo6ujFJp2kp0aj4K4234kav5Puj1o+1aaQ2vlOIscBnISJoCmvqw==
+cross-proxy@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cross-proxy/-/cross-proxy-1.0.1.tgz#7c82df3452b8fc4d1449586401926ae621405082"
+  integrity sha512-lS/u8axTJMlX1zBfvdjBD+aqq+9mmbNeQ9pOFA/WvDHNdMKZaefFLsrvzLTtetKCiAHkvnlAXUQ49YzDwWQB6w==
   dependencies:
     rxjs "^7.8.1"
 
