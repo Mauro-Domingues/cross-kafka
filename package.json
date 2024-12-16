@@ -1,6 +1,6 @@
 {
   "name": "cross-kafka",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An isolated core of kafkajs implementation based on @nestjs/microservices.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -35,8 +35,8 @@
     "!dist/interfaces/*.js"
   ],
   "dependencies": {
-    "kafkajs": "^2.2.4",
-    "rxjs": "^7.8.1"
+    "cross-proxy": "^1.0.0",
+    "kafkajs": "^2.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

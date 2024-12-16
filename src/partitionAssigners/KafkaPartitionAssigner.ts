@@ -1,3 +1,4 @@
+import { isType } from 'cross-proxy';
 import kafka, {
   Cluster,
   GroupMember,
@@ -6,14 +7,11 @@ import kafka, {
   MemberAssignment,
   MemberMetadata,
 } from 'kafkajs';
-import {
-  IAssignmentDTO,
-  IConsumerAssignmentDTO,
-  IDecodedMemberDTO,
-  IPreviousAssignmentDTO,
-  ITopicPartitionDTO,
-} from '@interfaces/IKafkaPartitionAssignerDTO';
-import { isType } from '@utils/isType';
+import { IAssignmentDTO } from '@interfaces/IAssignmentDTO';
+import { IConsumerAssignmentDTO } from '@interfaces/IConsumerAssignmentDTO';
+import { IDecodedMemberDTO } from '@interfaces/IDecodedMemberDTO';
+import { IPreviousAssignmentDTO } from '@interfaces/IPreviousAssignmentDTO';
+import { ITopicPartitionDTO } from '@interfaces/ITopicPartitionDTO';
 
 export class KafkaPartitionAssigner {
   public constructor(
@@ -118,7 +116,7 @@ export class KafkaPartitionAssigner {
     const decodedMembers = members.map(member => this.decodeMember(member));
     const sortedMemberIds = decodedMembers
       .map(member => member.memberId)
-      .sort();
+      .sort((a, b) => a.localeCompare(b));
 
     return { membersCount, decodedMembers, sortedMemberIds };
   }

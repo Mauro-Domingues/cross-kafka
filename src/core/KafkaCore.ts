@@ -1,4 +1,12 @@
 import {
+  IPatternDTO,
+  IMessageOptionsDTO,
+  IWritePacketDTO,
+  isType,
+  IReadPacketDTO,
+  Proxy,
+} from 'cross-proxy';
+import {
   Consumer,
   ConsumerConfig,
   ConsumerGroupJoinEvent,
@@ -11,26 +19,19 @@ import {
   RecordMetadata,
   logLevel,
 } from 'kafkajs';
-import { Proxy } from '@base/Proxy';
+import { IConsumerAssignmentDTO } from '@interfaces/IConsumerAssignmentDTO';
 import { IKafkaConfigDTO } from '@interfaces/IKafkaConfigDTO';
-import { IConsumerAssignmentDTO } from '@interfaces/IKafkaPartitionAssignerDTO';
-import { IMessageOptionsDTO } from '@interfaces/IMessageOptionsDTO';
-import { IPatternDTO } from '@interfaces/IPatternDTO';
-import { IReadPacketDTO, IWritePacketDTO } from '@interfaces/IProxyDTO';
 import { KafkaPartitionAssigner } from '@partitionAssigners/KafkaPartitionAssigner';
-import { isType } from '@utils/isType';
 
 export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
   private readonly consumerAssignments: Record<string, number> = {};
   private readonly responsePatterns: Array<string> = [];
   private readonly config: IKafkaConfigDTO | undefined;
   private declare initialized: Promise<void> | null;
-  protected readonly observerTimeout: number;
   private declare producer: Producer;
   private declare consumer: Consumer;
   private declare client: Kafka;
   private readonly defaults = {
-    observerTimeout: 30000,
     client: {
       brokers: ['localhost:9092'],
       requestTimeout: 30000,
@@ -46,10 +47,8 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
   } as Required<IKafkaConfigDTO>;
 
   public constructor(config?: IKafkaConfigDTO) {
-    super();
+    super(config?.observerTimeout);
     this.config = config;
-    this.observerTimeout =
-      this.config?.observerTimeout ?? this.defaults.observerTimeout;
   }
 
   protected getConsumerAssignments(): IConsumerAssignmentDTO {
@@ -98,8 +97,12 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
         } else {
           resolve(this.producer.connect());
         }
-      } catch (err) {
-        reject(err);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          reject(error);
+        } else {
+          reject(new Error(String(error)));
+        }
       }
     });
 
@@ -232,7 +235,9 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
       const replyTopic = this.getResponsePatternName(pattern);
       const replyPartition = this.getReplyTopicPartition(replyTopic);
 
-      Promise.resolve(this.serialize(packet.data, packet?.options))
+      Promise.resolve(
+        this.serialize(packet.data, packet?.options as IMessageOptionsDTO),
+      )
         .then((serializedPacket: ProducerRecord['messages'][number]) => {
           Object.assign(serializedPacket, {
             headers: {
@@ -301,7 +306,7 @@ export abstract class KafkaCore extends Proxy<Omit<Message, 'value'>> {
       const handlers = this.handlers.get(payload.topic);
 
       if (handlers?.length) {
-        handlers?.reduce<Promise<unknown>>(async (prev, next) => {
+        await handlers?.reduce<Promise<unknown>>(async (prev, next) => {
           await prev;
 
           return next({ replyId, error, isDisposed, ...rest });
